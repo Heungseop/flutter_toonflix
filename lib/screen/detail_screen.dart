@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_toonflix/models/webrtoon_detail_model.dart';
+
+import '../services/api_service.dart';
 
 class DetailScreen extends StatelessWidget {
   final String id, title, thumb;
@@ -9,6 +12,8 @@ class DetailScreen extends StatelessWidget {
     required this.title,
     required this.thumb,
   });
+
+  // Future<WebToonDetailModel> webtoon = ApiService.getToonById(id);
 
   @override
   Widget build(BuildContext context) {

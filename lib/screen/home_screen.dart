@@ -6,7 +6,7 @@ import 'package:flutter_toonflix/widgets/webtoon_widget.dart';
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
-  Future<List<WebToonModel>> webtoons = ApiService().getTodayToons();
+  Future<List<WebToonModel>> webtoons = ApiService.getTodayToons();
 
   @override
   Widget build(BuildContext context) {

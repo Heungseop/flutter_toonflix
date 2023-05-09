@@ -50,7 +50,7 @@
           },
           onEntrypointLoaded: function (engineInitializer) {
             engineInitializer
-              .initializeEngine({ renderer: "html" })
+              .initializeEngine({ renderer: "html" }) // avoid cors for web
               .then(function (appRunner) {
                 appRunner.runApp();
               });
