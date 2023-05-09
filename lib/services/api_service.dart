@@ -9,7 +9,7 @@ class ApiService {
   static const String baseUrl =
       "https://webtoon-crawler.nomadcoders.workers.dev";
   static const String today = "today";
-  static const String episode = "episode";
+  static const String episodes = "episodes";
 
   static Future<List<WebToonModel>> getTodayToons() async {
     print("getTodayToons");
@@ -46,10 +46,12 @@ class ApiService {
   static Future<List<WebToonEpisodeModel>> getLatestEpisodeById(
       String id) async {
     List<WebToonEpisodeModel> episodeInstances = [];
-    final url = Uri.parse('$baseUrl/$id/$episode');
+    final url = Uri.parse('$baseUrl/$id/$episodes');
+    print(url);
     final r = await http.get(url);
 
     if (r.statusCode == 200) {
+      print("r.body : ${r.body}");
       final epis = jsonDecode(r.body);
 
       for (var json in epis) {
