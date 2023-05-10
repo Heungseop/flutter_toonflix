@@ -12,7 +12,6 @@ class ApiService {
   static const String episodes = "episodes";
 
   static Future<List<WebToonModel>> getTodayToons() async {
-    print("getTodayToons");
     List<WebToonModel> webtoonInstances = [];
     final url = Uri.parse('$baseUrl/$today');
     final r = await http.get(url);
@@ -25,7 +24,6 @@ class ApiService {
         webtoonInstances.add(toon);
       }
 
-      print("finish getTodayToons");
       return webtoonInstances;
     }
 
@@ -47,11 +45,9 @@ class ApiService {
       String id) async {
     List<WebToonEpisodeModel> episodeInstances = [];
     final url = Uri.parse('$baseUrl/$id/$episodes');
-    print(url);
     final r = await http.get(url);
 
     if (r.statusCode == 200) {
-      print("r.body : ${r.body}");
       final epis = jsonDecode(r.body);
 
       for (var json in epis) {
