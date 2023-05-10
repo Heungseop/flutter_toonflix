@@ -57,7 +57,7 @@ class _DetailScreenState extends State<DetailScreen> {
         isLike ? likedToons!.remove(widget.id) : likedToons!.add(widget.id);
         isLike = !isLike;
       });
-      print("$isLike, $likedToons");
+      // print("$isLike, $likedToons");
       await prefs.setStringList("likedToons", likedToons);
     }
   }
