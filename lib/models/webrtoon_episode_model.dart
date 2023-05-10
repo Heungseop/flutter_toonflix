@@ -1,7 +1,7 @@
 class WebToonEpisodeModel {
-  final String id, title, thumb, rating, date;
+  final String webtoonId, id, title, thumb, rating, date;
 
-  WebToonEpisodeModel.fromJson(Map<String, dynamic> json)
+  WebToonEpisodeModel.fromJson(this.webtoonId, Map<String, dynamic> json)
       : title = json['title'],
         id = json['id'],
         rating = json['rating'],

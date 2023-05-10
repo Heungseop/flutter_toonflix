@@ -51,7 +51,7 @@ class ApiService {
       final epis = jsonDecode(r.body);
 
       for (var json in epis) {
-        final ep = WebToonEpisodeModel.fromJson(json);
+        final ep = WebToonEpisodeModel.fromJson(id, json);
         episodeInstances.add(ep);
       }
 
