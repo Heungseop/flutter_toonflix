@@ -50,9 +50,9 @@ class Webtoon extends StatelessWidget {
                         borderRadius: BorderRadius.circular(15),
                         boxShadow: [
                           BoxShadow(
-                              blurRadius: 10,
+                              blurRadius: 20,
                               offset: const Offset(3, 5),
-                              color: Colors.black.withOpacity(.3))
+                              color: Colors.black.withOpacity(.1))
                         ]),
                     child: Image.network(
                       thumb!,
