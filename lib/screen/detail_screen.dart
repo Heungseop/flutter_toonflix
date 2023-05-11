@@ -110,16 +110,31 @@ class _DetailScreenState extends State<DetailScreen> {
                               );
                             },
                           ),
-                          SliverFixedExtentList(
-                            itemExtent: 250.0,
+                          SliverGrid(
+                            gridDelegate:
+                                SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent: double.infinity,
+                              mainAxisExtent:
+                                  22 * webtoonAfter!.about.length / 31 +
+                                      25, // 행높이 * (글자수 / 행당 글자수) + 장르높이
+                              mainAxisSpacing: 10.0, // 행 간 거리
+                              crossAxisSpacing: 10.0, // 열 간 거리
+                            ),
+                            // 화면에 표시될 위젯을 설정
                             delegate: SliverChildBuilderDelegate(
-                              childCount: 1,
+                              // addAutomaticKeepAlives: true,
                               (BuildContext context, int index) {
-                                return ListTile(
-                                  title: Column(
+                                return Container(
+                                  clipBehavior: Clip.hardEdge,
+                                  decoration:
+                                      const BoxDecoration(color: Colors.white),
+                                  height: double.minPositive,
+                                  alignment: Alignment.center,
+                                  // color: Colors.green,
+                                  child: Column(
                                     children: [
                                       Text(
-                                        webtoonAfter!.about,
+                                        webtoonAfter.about,
                                         // style: const TextStyle(fontSize: 15),
                                       ),
                                       const SizedBox(
@@ -133,8 +148,34 @@ class _DetailScreenState extends State<DetailScreen> {
                                   ),
                                 );
                               },
+                              childCount: 1,
                             ),
                           ),
+                          // SliverFixedExtentList(
+                          //   itemExtent: 250.0,
+                          //   delegate: SliverChildBuilderDelegate(
+                          //     childCount: 1,
+                          //     (BuildContext context, int index) {
+                          //       return ListTile(
+                          //         title: Column(
+                          //           children: [
+                          //             Text(
+                          //               webtoonAfter.about,
+                          //               // style: const TextStyle(fontSize: 15),
+                          //             ),
+                          //             const SizedBox(
+                          //               height: 10,
+                          //             ),
+                          //             Text(
+                          //               '${webtoonAfter.genre} / ${webtoonAfter.age}',
+                          //               style: const TextStyle(fontSize: 16),
+                          //             ),
+                          //           ],
+                          //         ),
+                          //       );
+                          //     },
+                          //   ),
+                          // ),
                           SliverFixedExtentList(
                             itemExtent: 55.0,
                             // 화면에 표시될 위젯을 설정
