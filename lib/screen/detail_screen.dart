@@ -86,6 +86,15 @@ class _DetailScreenState extends State<DetailScreen> {
                               final scrolled = constraints.scrollOffset >
                                   (appBarExpendedHeight / 2);
                               return SliverAppBar(
+                                actions: [
+                                  IconButton(
+                                    onPressed: onHeartTap,
+                                    icon: isLike
+                                        ? const Icon(Icons.favorite_outlined)
+                                        : const Icon(
+                                            Icons.favorite_outline_outlined),
+                                  )
+                                ],
                                 expandedHeight: appBarExpendedHeight,
                                 pinned: true, // 스크롤 시 앱바를 밀고 리스트로 꽉채울지 아니면 고정할지
                                 floating: false,
