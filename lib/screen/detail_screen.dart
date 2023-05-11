@@ -36,14 +36,6 @@ class _DetailScreenState extends State<DetailScreen> {
     });
 
     prefs = await SharedPreferences.getInstance();
-    // final likedToons = prefs.getStringList("likedToons");
-    // if (likedToons != null) {
-    //   setState(() {
-    //     isLike = likedToons.contains(widget.id);
-    //   });
-    // } else {
-    //   prefs.setStringList("likedToons", []);
-    // }
   }
 
   // 초기화하고 싶은 멤버가 있는데 생성자에서 못하는 경우 initState에서 작업한다.

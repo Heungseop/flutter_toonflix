@@ -8,9 +8,4 @@ class WebToonDetailModel extends WebToonModel {
         genre = json['genre'],
         age = json['age'],
         super.fromJson(id: id, json: json);
-
-  @override
-  String toString() {
-    return "id = $id, title = $title, thumb = $thumb,";
-  }
 }
