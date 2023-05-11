@@ -25,6 +25,7 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
+  final appBarExpendedHeight = 200.0;
   late Future<WebToonDetailModel> webtoon;
   late Future<List<WebToonEpisodeModel>> epList;
   late SharedPreferences prefs;
@@ -64,110 +65,98 @@ class _DetailScreenState extends State<DetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("build webtoon : $webtoon");
+
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        elevation: 2,
         backgroundColor: Colors.white,
-        foregroundColor: Colors.green,
-        centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: onHeartTap,
-            icon: isLike
-                ? const Icon(Icons.favorite_outlined)
-                : const Icon(Icons.favorite_outline_outlined),
-          )
-        ],
-        title: Text(
-          widget.title,
-          style: const TextStyle(
-            fontSize: 24,
-          ),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 20, 20, 50),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Hero(
-                    tag: "${widget.heroIdPrefix}${widget.id}",
-                    child: Container(
-                      width: 250,
-                      clipBehavior: Clip.hardEdge,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          boxShadow: [
-                            BoxShadow(
-                                blurRadius: 15,
-                                offset: const Offset(10, 10),
-                                color: Colors.black.withOpacity(.5))
-                          ]),
-                      child: widget.thumb?.isEmpty ?? true
-                          ? const Text("noimage")
-                          : Image.network(
-                              widget.thumb!,
+        body: FutureBuilder(
+            future: webtoon,
+            builder: (context, webtoonSnapshot) {
+              if (webtoonSnapshot.hasData) {
+                final webtoonAfter = webtoonSnapshot.data;
+                return FutureBuilder(
+                  future: epList,
+                  initialData: const [],
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return CustomScrollView(
+                        slivers: [
+                          SliverLayoutBuilder(
+                            builder: (context, constraints) {
+                              final scrolled = constraints.scrollOffset >
+                                  (appBarExpendedHeight / 2);
+                              return SliverAppBar(
+                                expandedHeight: appBarExpendedHeight,
+                                pinned: true, // 스크롤 시 앱바를 밀고 리스트로 꽉채울지 아니면 고정할지
+                                floating: false,
+                                snap: false,
+                                backgroundColor: Colors.green,
+                                flexibleSpace: FlexibleSpaceBar(
+                                  title: Text(
+                                    widget.title,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      backgroundColor:
+                                          scrolled ? null : Colors.black38,
+                                    ),
+                                  ),
+                                  centerTitle: true,
+                                  background: Image.network(
+                                    widget.thumb!,
+                                    fit: BoxFit.fitWidth,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                          SliverFixedExtentList(
+                            itemExtent: 250.0,
+                            delegate: SliverChildBuilderDelegate(
+                              childCount: 1,
+                              (BuildContext context, int index) {
+                                return ListTile(
+                                  title: Column(
+                                    children: [
+                                      Text(
+                                        webtoonAfter!.about,
+                                        // style: const TextStyle(fontSize: 15),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        '${webtoonAfter.genre} / ${webtoonAfter.age}',
+                                        style: const TextStyle(fontSize: 16),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
                             ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              FutureBuilder(
-                future: webtoon,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          snapshot.data!.about,
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Text(
-                          '${snapshot.data!.genre} / ${snapshot.data!.age}',
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                      ],
-                    );
-                  }
-                  return const Text("...");
-                },
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              FutureBuilder(
-                future: epList,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        return EpisodeWidget(ep: snapshot.data![index]);
-                      },
-                      // children: [
-                      //   for (var ep in snapshot.data!) EpisodeWidget(ep: ep),
-                      // ],
-                    );
-                  }
-                  return const Text("...");
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+                          ),
+                          SliverFixedExtentList(
+                            itemExtent: 55.0,
+                            // 화면에 표시될 위젯을 설정
+                            delegate: SliverChildBuilderDelegate(
+                              childCount: snapshot.data!.length,
+                              (BuildContext context, int index) {
+                                return ListTile(
+                                  title:
+                                      EpisodeWidget(ep: snapshot.data![index]),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+
+                    return const Text("...");
+                  },
+                );
+              }
+              return const Text("...");
+            }));
   }
 }
