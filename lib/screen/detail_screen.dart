@@ -5,15 +5,19 @@ import 'package:flutter_toonflix/widgets/episode_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/api_service.dart';
+import 'home_screen.dart';
 
 class DetailScreen extends StatefulWidget {
-  final String id, title, thumb;
+  final String id, title;
+  final String? thumb;
+  final String heroIdPrefix;
 
   const DetailScreen({
     super.key,
     required this.id,
     required this.title,
-    required this.thumb,
+    this.thumb,
+    required this.heroIdPrefix,
   });
 
   @override
@@ -27,15 +31,19 @@ class _DetailScreenState extends State<DetailScreen> {
   bool isLike = false;
 
   Future initPref() async {
+    setState(() {
+      isLike = HomeScreen.likedIds.contains(widget.id);
+    });
+
     prefs = await SharedPreferences.getInstance();
-    final likedToons = prefs.getStringList("likedToons");
-    if (likedToons != null) {
-      setState(() {
-        isLike = likedToons.contains(widget.id);
-      });
-    } else {
-      prefs.setStringList("likedToons", []);
-    }
+    // final likedToons = prefs.getStringList("likedToons");
+    // if (likedToons != null) {
+    //   setState(() {
+    //     isLike = likedToons.contains(widget.id);
+    //   });
+    // } else {
+    //   prefs.setStringList("likedToons", []);
+    // }
   }
 
   // 초기화하고 싶은 멤버가 있는데 생성자에서 못하는 경우 initState에서 작업한다.
@@ -48,18 +56,18 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   onHeartTap() async {
-    var likedToons = prefs.getStringList("likedToons");
+    var likedToons = HomeScreen.likedIds;
 
-    if (likedToons != null) {
-      var set = Set<String>.from(likedToons);
-      likedToons = set.toList();
-      setState(() {
-        isLike ? likedToons!.remove(widget.id) : likedToons!.add(widget.id);
-        isLike = !isLike;
-      });
-      // print("$isLike, $likedToons");
-      await prefs.setStringList("likedToons", likedToons);
-    }
+    setState(() {
+      isLike ? likedToons.remove(widget.id) : likedToons.add(widget.id);
+      isLike = !isLike;
+    });
+
+    HomeScreen.likedIds = Set<String>.from(likedToons).toList();
+    await prefs.setStringList("likedToons", likedToons);
+    setState(() {
+      HomeScreen.likeWebtoonsRefresh();
+    });
   }
 
   @override
@@ -95,7 +103,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Hero(
-                    tag: widget.id,
+                    tag: "${widget.heroIdPrefix}${widget.id}",
                     child: Container(
                       width: 250,
                       clipBehavior: Clip.hardEdge,
@@ -107,9 +115,11 @@ class _DetailScreenState extends State<DetailScreen> {
                                 offset: const Offset(10, 10),
                                 color: Colors.black.withOpacity(.5))
                           ]),
-                      child: Image.network(
-                        widget.thumb,
-                      ),
+                      child: widget.thumb?.isEmpty ?? true
+                          ? const Text("noimage")
+                          : Image.network(
+                              widget.thumb!,
+                            ),
                     ),
                   ),
                 ],
@@ -148,10 +158,15 @@ class _DetailScreenState extends State<DetailScreen> {
                 future: epList,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    return Column(
-                      children: [
-                        for (var ep in snapshot.data!) EpisodeWidget(ep: ep),
-                      ],
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        return EpisodeWidget(ep: snapshot.data![index]);
+                      },
+                      // children: [
+                      //   for (var ep in snapshot.data!) EpisodeWidget(ep: ep),
+                      // ],
                     );
                   }
                   return const Text("...");

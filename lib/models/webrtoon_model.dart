@@ -1,8 +1,10 @@
 class WebToonModel {
-  final String id, title, thumb;
+  final String id, title;
+  final String? thumb;
 
-  WebToonModel.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
+  // WebToonModel(this.id, this.title, this.thumb);
+  WebToonModel.fromJson({String? id, required Map<String, dynamic> json})
+      : id = id ?? json['id'],
         title = json['title'],
         thumb = json['thumb'];
 
@@ -11,9 +13,3 @@ class WebToonModel {
     return "id = $id, title = $title, thumb = $thumb,";
   }
 }
-  // var temp = {
-  //   "id": "796152",
-  //   "title": "마루는 강쥐",
-  //   "thumb":
-  //       "https://image-comic.pstatic.net/webtoon/796152/thumbnail/thumbnail_IMAG21_26b9c1d8-ca2d-4fc7-87ea-a3334634236a.jpg",
-  // };

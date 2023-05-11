@@ -1,15 +1,16 @@
-class WebToonDetailModel {
-  final String title, about, genre, age, thumb;
+import 'package:flutter_toonflix/models/webrtoon_model.dart';
 
-  WebToonDetailModel.fromJson(Map<String, dynamic> json)
-      : title = json['title'],
-        about = json['about'],
+class WebToonDetailModel extends WebToonModel {
+  final String about, genre, age;
+
+  WebToonDetailModel.fromJson(String id, Map<String, dynamic> json)
+      : about = json['about'],
         genre = json['genre'],
         age = json['age'],
-        thumb = json['thumb'];
+        super.fromJson(id: id, json: json);
 
   @override
   String toString() {
-    return "title = $title";
+    return "id = $id, title = $title, thumb = $thumb,";
   }
 }

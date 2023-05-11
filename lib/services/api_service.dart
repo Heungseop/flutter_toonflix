@@ -20,7 +20,7 @@ class ApiService {
       List<dynamic> toons = jsonDecode(r.body);
 
       for (var json in toons) {
-        final toon = WebToonModel.fromJson(json);
+        final toon = WebToonModel.fromJson(json: json);
         webtoonInstances.add(toon);
       }
 
@@ -35,7 +35,7 @@ class ApiService {
     final r = await http.get(url);
 
     if (r.statusCode == 200) {
-      return WebToonDetailModel.fromJson(jsonDecode(r.body));
+      return WebToonDetailModel.fromJson(id, jsonDecode(r.body));
     }
 
     throw Error();
