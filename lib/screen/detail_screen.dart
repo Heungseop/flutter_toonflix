@@ -102,9 +102,12 @@ class _DetailScreenState extends State<DetailScreen> {
                                     ),
                                   ),
                                   centerTitle: true,
-                                  background: Image.network(
-                                    widget.thumb!,
-                                    fit: BoxFit.fitWidth,
+                                  background: Hero(
+                                    tag: "${widget.heroIdPrefix}${widget.id}",
+                                    child: Image.network(
+                                      widget.thumb!,
+                                      fit: BoxFit.fitWidth,
+                                    ),
                                   ),
                                 ),
                               );
